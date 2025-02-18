@@ -22,3 +22,6 @@
 
   # install jenkins
       sudo apt-get install jenkins -y
+
+
+  # jenkins runing on portnumber 8080 you attach this port number in your security group of ec2 instance
