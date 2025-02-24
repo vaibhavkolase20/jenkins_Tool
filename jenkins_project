@@ -1,0 +1,24 @@
+1) clone the repogetory using
+git clone https://github.com/LondheShubham153/Wanderlust-Mega-project.git
+
+2) lauch the indtance tito large (using therraform or manualy bothe are equal)
+
+3) allow por numeber fo bellow
+  1) 30000-32767
+  2) 443
+  3) 6379 
+  4) 465
+  5) 3000-10000
+  6) 25
+  7) 6443
+
+4) install tools into ec2 incetance
+1) install docker
+2) install jenkins
+3) cretate eks clustor(crete one user and generate one ces key and configer awscli uing chat gpt and pest aces key)
+4) install kubectl
+5) install eksctl
+6) crete EKs clustor
+7) install Trivy
+8) install sonarquibe and configer it
+9) go to your gmail account and open there two step verification
