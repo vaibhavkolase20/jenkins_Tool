@@ -1,0 +1,54 @@
+# create one instace which is t2medeum 
+# apply role on this ec2 instace
+# put this code
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Terraform') {
+            steps {
+                sh '''
+                echo "jenkins ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/jenkins
+                wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+                echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+                sudo apt update
+                sudo apt install -y terraform
+                '''
+            }
+        }
+
+        stage('Setup Terraform') {
+            steps {
+                writeFile file: 'main.tf', text: '''
+                provider "aws" {
+                  region = "us-east-1"
+                }
+
+                resource "aws_instance" "new_ec2" {
+                  ami           = "ami-04b4f1a9cf54c11d0"   # Amazon Linux 2 AMI
+                  instance_type = "t2.micro"
+                  key_name      = "Rhohit.key"  # तुमचा EC2 Key Pair नाव द्या
+                  tags = {
+                    Name = "Terraform-Created-Instance"
+                  }
+                }
+                '''
+            }
+        }
+
+        stage('Initialize Terraform') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+
+        stage('Apply Terraform') {
+            steps {
+                sh 'terraform apply -auto-approve'
+            }
+        }
+    }
+}
+
+
+this is the link=== https://chatgpt.com/canvas/shared/67c58932beb88191868cc2cd46e56f26
