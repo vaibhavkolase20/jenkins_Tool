@@ -51,3 +51,6 @@ pipeline {
 # use this command
 sudo visudo
 jenkins ALL=(ALL) NOPASSWD: ALL
+
+
+# this is the link=== https://chatgpt.com/canvas/shared/67c582ab0a4c8191838880e976715cd0
