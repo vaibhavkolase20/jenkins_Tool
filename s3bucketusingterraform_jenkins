@@ -1,3 +1,6 @@
+# how to create terraform and s3 bucket using jenkins
+# add iam s3 role in your instace
+
 # add this code in pipeline
 pipeline {
     agent any
