@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        SONAR_HOME = tool 'sonar' // Match this name with the SonarQube Scanner name in Jenkins tool config
+    }
+
+    stages {
+        stage('Code from GitHub') {
+            steps {
+                echo 'This is CODE: Checkout Stage'
+                git branch: 'devops', url: 'https://github.com/krishnaacharyaa/wanderlust.git'
+            }
+        }
+
+        stage('SonarQube Quality Analysis') {
+            steps {
+                echo 'This is CODE: SonarQube Stage'
+                withSonarQubeEnv('sonar') { // 'sonar' must match the name of SonarQube server in Jenkins config
+                    sh '''$SONAR_HOME/bin/sonar-scanner \
+                        -Dsonar.projectKey=wanderlust \
+                        -Dsonar.projectName=wanderlust \
+                        -Dsonar.sources=.'''
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'This is CODE: Test Stage'
+            }
+        }
+
+        stage('SonarQube Analysis (Placeholder)') {
+            steps {
+                echo 'This is CODE: SonarQube Analysis Stage'
+            }
+        }
+
+        stage('Deployment') {
+            steps {
+                echo 'This is CODE: Deployment Stage'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
