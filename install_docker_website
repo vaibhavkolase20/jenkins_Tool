@@ -1,0 +1,76 @@
+pipeline {
+    agent { label 'agent-vinod' }
+
+    stages {
+
+        stage('Check Docker') {
+            steps {
+                sh '''
+                if command -v docker >/dev/null 2>&1; then
+                  echo "Docker already installed"
+                  docker --version
+                else
+                  echo "Docker not installed"
+                fi
+                '''
+            }
+        }
+
+        stage('Install Docker') {
+            steps {
+                sh '''
+                if ! command -v docker >/dev/null 2>&1; then
+                  echo "Installing Docker..."
+
+                  sudo apt update -y
+                  sudo apt install -y docker.io
+
+                  sudo systemctl start docker
+                  sudo systemctl enable docker
+
+                  sudo usermod -aG docker ubuntu
+
+                  echo "Docker installation completed"
+                else
+                  echo "Docker already present, skipping install"
+                fi
+                '''
+            }
+        }
+
+        stage('Verify Docker') {
+            steps {
+                sh '''
+                sudo docker --version
+                sudo docker ps
+                '''
+            }
+        }
+
+        stage('Pull Image from Docker Hub') {
+            steps {
+                sh '''
+                echo "Pulling image from Docker Hub"
+                sudo docker pull vaibhbav/cow-repo:tagname
+                '''
+            }
+        }
+
+        stage('Run Container on Port 80') {
+            steps {
+                sh '''
+                echo "Stopping old container if exists"
+                sudo docker rm -f cow-app || true
+
+                echo "Running container from Docker Hub image"
+                sudo docker run -d \
+                  --name cow-app \
+                  -p 80:80 \
+                  vaibhbav/cow-repo:tagname
+
+                sudo docker ps
+                '''
+            }
+        }
+    }
+}
